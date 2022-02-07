@@ -19,7 +19,7 @@ async function getmanagementdata() {
     value = value;
   }
 
-  let url = `http://localhost:5000/getmanagerdata/${value}`;
+  let url = `/getmanagerdata/${value}`;
   let resp = await fetch(url);
   let data = await resp.json();
 

@@ -262,7 +262,7 @@ exports.sendforgotpasswordmail=(req,res)=>{
                      
                    const token = jwt.sign({id:id,role:role},md5(process.env.JWT_OTPSECREAT),{expiresIn:process.env.JWT_OTPEXPERIATION});
 console.log(token);
-const link=`http://localhost:5000/forgotPasswordresetmail?id=${token}`
+const link=`https://demo-si.herokuapp.com/forgotPasswordresetmail?id=${token}`
 
 linkmail.linkgmail(req.params.id,link);
 

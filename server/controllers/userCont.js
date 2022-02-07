@@ -537,7 +537,7 @@ exports.changePassword = async (req, res) => {
 ////test
 
 exports.test = (req, res) => {
-  res.render("test");
+  res.render("demohome");
 };
 
 ////employeefilter

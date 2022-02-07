@@ -9,7 +9,10 @@ window.addEventListener('DOMContentLoaded',()=>{
             setTimeout(()=>{
                span.classList.add('active');
             },(index+1)*600);
+           
+            
         });
+   
         setTimeout(()=>{
            
             logoout.forEach((span,idx)=>{
@@ -18,6 +21,7 @@ window.addEventListener('DOMContentLoaded',()=>{
                     span.classList.add('fade')
                 },(idx+1)*200);
             })
+              
         },2000);
         setTimeout(()=>{
             intro.style.top='-100vh'

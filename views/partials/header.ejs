@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <script src="jquery-2.1.4.js"></script>
+    <link rel="stylesheet" href="/css/main.css">
+<link rel="icon" href="image/nuron 2018-04.png">
+
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.min.js"
+    integrity="sha384-Atwg2Pkwv9vp0ygtn1JAojH0nYbwNJLPhwyoVbhoPwBhjQPR5VtM2+xf0Uwh9KtT"
+    crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+   
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+    crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"
+        integrity="sha384-7+zCNj/IqJ95wo16oMtfsKbZ9ccEh31eOz1HGyDuCQ6wgnyJNSYdrPa03rtR1zdB"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js"
+        integrity="sha384-QJHtvGhmr9XOIpI6YVutG+2QOK9T+ZnN4kzFN1RtK3zEFEIsxhlmWl5/YESvpZ13"
+        crossorigin="anonymous"></script>
+    <title>Nuron-SIS</title>
+   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk="
+        crossorigin="anonymous"></script>
+       <header>
+        <nav class="navbar fixed-top navbar-expand-lg navbar-dark bg-dark">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="/"><img src="image/nuron 2018-04.png" alt="nuron" width="40" height="40"></a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo02"
+                    aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
+                    <ul class="navbar-nav ms-auto ">
+                        <li class="nav-item">
+                            <a class="nav-link active pe-4" aria-current="page" href="/"> Home</a>
+                        </li>
+                        <li class="nav-item pe-4">
+                            <a class="nav-link " href="/adduser">Add Employee</a>
+                        </li>
+                        <li class="nav-item pe-4">
+                            <a class="nav-link " href="/add_role">Add Roles</a>
+                        </li>
+        
+        
+                        <li class="nav-item dropdown   ">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarScrollingDropdown" role="button"
+                                data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="bi bi-person-circle fa-4x"></i>
+                            </a>
+                            <ul class="dropdown-menu " style="right: 0;left:auto" aria-labelledby="navbarScrollingDropdown">
+                                <li><button type="button" class="dropdown-item" data-bs-toggle="modal"
+                                        data-bs-target="#changepassword">Change Password</button></li>
+        
+                                <li>
+                                    <hr class="dropdown-divider">
+                                </li>
+                                <li><button type="button" class=" dropdown-item active " data-bs-toggle="modal"
+                                        data-bs-target="#logout">
+                                        Logout
+                                    </button></li>
+                            </ul>
+                        </li>
+        
+        
+                    </ul>
+        
+                </div>
+            </div>
+        </nav>
+       </header>
+</head>
+
+<body style="background-image:url('/image/bg.svg'); margin-top: 5%;">
+
+    
+    <div class="modal fade  " id="logout" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">LOGOUT</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Are you sure you want to log out?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <a type="button" href="/logout" class="btn btn-primary">Logout</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade  " id="changepassword" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Change Password</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="liveAlertPlaceholder"></div>
+                    <div class="checkbox mb-3"></div>
+                    <form action="/changepassword" method="post" onsubmit="return checkPassword()">
+                        <div class="form-floating" style="display: flex;">
+                            <input type="password" class="form-control rounded-pill " id="oldpassword" name="oldpassword"
+                             autocomplete="off"   placeholder="oldpassword" required>
+                            <span style="  position: absolute;
+                              margin-left: 90%;
+                              height: 60px;
+                              display: flex;
+                              align-items: center;">
+                                <i class="bi bi-eye-slash" id="togglePassword"></i>
+                            
+                            </span>
+                            <label for="oldpassword"><i class="bi bi-shield-lock"></i>&ensp; Enter Old Password</label>
+                        </div>
+                        <div class="checkbox mb-3"></div>
+                        <div class="form-floating"  style="display: flex;">
+                            <input type="password" class="form-control rounded-pill" id="changePassword" name="changePassword"
+                              autocomplete="off"  placeholder="name@example.com" required>
+                                <span style="  position: absolute;
+                                                              margin-left: 90%;
+                                                              height: 60px;
+                                                              display: flex;
+                                                              align-items: center;">
+                                    <i class="bi bi-eye-slash" id="togglePasswordnew"></i>
+                                
+                                </span>
+                            <label for="changePassword"><i class="bi bi-shield-lock"></i> &ensp; New Password</label>
+                        </div>
+                        <div class="checkbox mb-3"></div>
+                        <div class="form-floating" style="display: flex;">
+                            <input type="password" class="form-control rounded-pill " id="floatingPasswordd" name="floatingPasswordd"
+                              autocomplete="off"  placeholder="Password" required>
+                                <span style="  position: absolute;
+                                                              margin-left: 90%;
+                                                              height: 60px;
+                                                              display: flex;
+                                                              align-items: center;">
+                                    <i class="bi bi-eye-slash" id="togglePasswordsetnew"></i>
+                                
+                                </span>
+                            <label for="floatingPasswordd"><i class="bi bi-shield-lock"></i>&ensp; Re-enter New Password</label>
+                        </div>
+                        
+                        <div class="checkbox mb-3">
+                        
+                        </div>
+                        <div class="checkbox mb-3"></div>
+                        <button class="w-100 btn btn-lg btn-primary rounded-pill" type="submit">Set Password</button>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="/js/toggle.js"></script>
+    

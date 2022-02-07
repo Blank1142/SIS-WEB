@@ -1,0 +1,98 @@
+<%- include('partials/header') -%>
+
+
+    <div class="container pt-5 pb-5">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/">Home</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Add Role</li>
+            </ol>
+        </nav>
+        <h2> Add Roles</h2>
+        <br>
+        <% if(Message) { %>
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <%= Message %>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            <% } %>
+                <form class="row g-3 need-validation" action="/<%=url %>" method="post">
+                    <div class="col-6">
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" value="<%=rolename%>" id="role" name="role"  required>
+                            <label for="role">Role Name</label>
+                        </div>
+                    </div>
+
+                    <div class="col-12 d-grid">
+                        <button class="btn btn-primary" type="submit"><%= button %></button>
+                    </div>
+                </form>
+
+
+<div> <br> <br></div>
+<div class="divider"></div>
+<hr>
+<div> <br> <br></div>
+
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead class="tahead-dark">
+                            <tr class="table-dark">
+                                <th scope="col">ID</th>
+                                
+                                <th scope='col'>Role</th>
+                               
+                                <th scope="col" class="text-end">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% data.forEach((data)=>{ %>
+                
+                
+                
+                                <tr>
+                                    <th scope="row">
+                                        <%=data.role_id %>
+                                    </th>
+                                    <td>
+                                        <%= data.role_name %>
+                                    </td>
+                                  
+                                    <td class="text-end">
+                
+                                        <a href="roleedit?id=<%= data.role_id %>&name=<%=data.role_name%>" type="button" class="btn btn-light btn-small"><i
+                                                class="bi bi-pencil"></i> </a>
+                                        <a href="roledelete/<%= data.role_id %>" type="button" class="btn btn-light btn-small"><i
+                                                class="bi bi-person-x"></i> </a>
+                                    </td>
+                                </tr>
+                
+                                <% }) %>
+                        </tbody>
+                    </table>
+                </div>
+                </div>
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <%- include('partials/footer') -%>

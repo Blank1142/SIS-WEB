@@ -1,0 +1,52 @@
+<%- include('partials/header') -%>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<div>
+    <canvas style="width: 50%; height: 70%;" id="myChart" ></canvas>
+</div>
+
+
+<script>
+ // <block:setup:1>
+    const data = {
+        labels: [
+            'Red',
+            'Green',
+            'Yellow',
+            'Grey',
+            'Blue'
+        ],
+        datasets: [{
+            label: 'My First Dataset',
+            data: [11, 16, 7, 3, 14],
+            backgroundColor: [
+                'rgb(255, 99, 132)',
+                'rgb(75, 192, 192)',
+                'rgb(255, 205, 86)',
+                'rgb(201, 203, 207)',
+                'rgb(54, 162, 235)'
+            ]
+        }]
+    };
+    // </block:setup>
+
+    // <block:config:0>
+    const config = {
+        type: 'polarArea',
+        data: data,
+        options: {  responsive: false}
+    };
+    // </block:config>
+
+   
+</script>
+<script>
+    const myChart = new Chart(
+        document.getElementById('myChart'),
+        config
+    );
+</script>
+
+
+
+
+    <%- include('partials/footer') -%>

@@ -1,0 +1,118 @@
+<%- include('partials/header') -%>
+
+
+<div class="container pt-5 pb-5">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/">Home</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Add User</li>
+        </ol>
+    </nav>
+<div id="alertcheck"></div>
+
+<% if(Message) { %>
+<div class="alert alert-success alert-dismissible fade show" role="alert">
+  <%= Message %>
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+<% } %>
+
+<form class="row g-3 need-validation" action="/adduser" method="post" validate>
+    <div class="col-6">
+        <div class="form-floating mb-3">
+            <input type="number" class="form-control" id="emp_id" name="emp_id" required>
+            
+            <label for="emp_id">Employee ID</label>
+          
+            
+        </div>
+    </div>
+   <div class="col-6">
+    <div class="form-floating mb-3">
+        <input type="text" class="form-control" id="Name" name="Name" placeholder="Jon" required>
+        <label for="Name">Employee Name</label>
+       
+    </div>
+    </div>
+    <div class="col-6">
+    <div class="form-floating mb-3">
+        <input type="email" class="form-control" id="Email" name="Email" placeholder="name@example.com" required>
+        <label for="Email">Email address</label>
+    </div>
+    </div>
+    <div class="col-6">
+        <div class="form-floating">
+            <input type="text" class="form-control" id="Phone" name="Phone" placeholder="Phone" required>
+            <label for="Phone">Phone Number</label>
+        </div>
+    </div>
+    <div class="col-6">
+        <div class="form-floating">
+            <select class="form-select" id="role" name="role" aria-label="Floating label select example" required>
+                <option  name="role">
+                    --- Select ---
+                </option>
+                <% role.forEach((data)=>{ %>
+                <option value="<%= data.role_name %>" name="role"><%= data.role_name %></option>
+        <% }) %>
+            </select>
+            <label for="role">Employee Role</label>
+        </div>
+    </div>
+    <div class="col-6">
+        <div class="form-floating">
+            <select class="form-select" id="manager" name="manager" aria-label="Floating label select example">
+               
+                
+                   
+            </select>
+            <label for="manager">Reporting Manager Name</label>
+        </div>
+    </div>
+    <div class="col-6">
+        <div class="form-floating mb-3">
+            <input type="number" class="form-control" id="managerid" name="managerid" disabled >
+            <label for="managerid">Reporting Manager ID</label>
+        </div>
+    </div>
+    <div class="col-6">
+    <div class="form-floating">
+        <input type="password" class="form-control" id="floatigPassword" name="floatingPassword" placeholder="Password" autocomplete="on" required >
+        
+        <label for="floatingPassword">Set Password</label>
+        
+    </div>
+    
+    </div>
+    
+<div class="col-12 text-end">
+
+    <i class="bi bi-toggle2-off" id="generate_password" data-toggle="tooltip" data-placement="right" title="Generate Password"></i>
+</div>
+    <div class="col-12 d-grid">
+        <button class="btn btn-primary" type="submit">Add Employee</button>
+    </div>
+</form>
+
+
+       
+<script src="js/pass.js"></script>
+
+
+
+<script src="js/usercheck.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<%- include('partials/footer') -%>

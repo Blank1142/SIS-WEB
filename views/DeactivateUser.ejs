@@ -1,0 +1,84 @@
+<%- include('partials/header') -%>
+
+
+    <div class="container pt-5 pb-5">
+
+        <div class="row">
+            <div class="col-6">
+                <h1>Welcome <span style="font-family: cursive;font-weight: normal;font-size:26px;">
+                        <%= Name %>
+                    </span></h1>
+            </div>
+
+            <div class="col-6 d-flex justify-content-end">
+                <a href="/adduser" type="button" class="btn btn-primary align-self-center">+ Add User</a>
+            </div>
+            <div></div>
+            <div class=" d-flex justify-content-end">
+                <label for="status">Employee Status &nbsp; </label>
+                <select class="align-self-center" name="status" id="status">
+                    
+                    <option value="Deactivate">Deactivate</option>
+                    <option value="Active">Active</option>
+                </select>
+
+            </div>
+        </div>
+        <br>
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead class="tahead-dark">
+                    <tr class="table-dark">
+                        <th scope="col">Emp_ID</th>
+                        <th scope="col">Employee Name</th>
+                        <th scope="col">Employee Email</th>
+                        <th scope='col'>Employee Phone Number</th>
+                        <th scope='col'>Role</th>
+                        <th scope='col'>Reporting Manager</th>
+                      
+                    </tr>
+                </thead>
+                <tbody>
+                    <% data.forEach((data)=>{ %>
+
+
+
+                        <tr>
+                            <th style="color: red;" scope="row">
+                                <%=data.emp_id %>
+                            </th>
+                            <td style="color: red;">
+                                <%= data.emp_name %>
+                            </td>
+                            <td style="color: red;">
+                                <%= data.emp_email %>
+                            </td>
+                            <td style="color: red;">
+                                <%=data.phone_no_1 %>
+                            </td>
+                            <td style="color: red;">
+                                <%=data.role_name %>
+                            </td>
+                            <td style="color: red;">
+                                <%=data.reporting_manager_name %>
+                            </td>
+                           
+                        </tr>
+
+                        <% }) %>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+
+
+
+
+
+
+
+    <script src="/js/filter.js"></script>
+
+
+    <%- include('partials/footer') -%>

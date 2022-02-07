@@ -1,0 +1,96 @@
+<%- include('partials/header') -%>
+
+    <div class="container pt-5 pb-5">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/">Home</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Edit User</li>
+            </ol>
+        </nav>
+        <% if(Message) { %>
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <%= Message %>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            <% } %>
+    
+                <% data.forEach((data)=>{ %>
+                    <form class="row g-3 need-validation" action="/update/<%= data.emp_id %>/<%= data.emp_email %>" method="post">
+                        <div class="col-6">
+                            <div class="form-floating mb-3">
+                                <input type="text" class="form-control" id="emp_id" value='<%= data.emp_id %>' name="emp_id"
+                                    placeholder="Jon" disabled> 
+                                <label for="emp_id">Employee ID</label>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="form-floating mb-3">
+                                <input type="text" class="form-control" id="Name" value='<%= data.emp_name %>' name="Name"
+                                    placeholder="Jon">
+                                <label for="Name">Employee Name</label>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="form-floating mb-3">
+                                <input type="email" class="form-control" id="Email" value='<%= data.emp_email %>'
+                                    name="Email" placeholder="name@example.com" disabled>
+                                <label for="Email">Email address</label>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="form-floating">
+                                <input type="text" class="form-control" id="Phone" name="Phone"
+                                    value='<%= data.phone_no_1 %>' placeholder="Phone">
+                                <label for="Phone">Phone Number</label>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="form-floating">
+                                <select class="form-select" id="role" name="role"
+                                    aria-label="Floating label select example">
+                                    <option selected>
+                                        <%= data.role_name %>
+                                    </option>
+                                    <% role.forEach((role)=>{ %>
+    
+    
+                                        <option value="<%= role.role_name %>" name="role">
+                                            <%= role.role_name %>
+                                        </option>
+    
+    
+                                        <% }) %>
+                                </select>
+                                <label for="role">Employee Role</label>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="form-floating">
+                                <select class="form-select" id="manager" name="manager"
+                                    aria-label="Floating label select example">
+    
+                                    <option value="<%= role.role_name %>" name="role">
+                                        <%= data.reporting_manager_name %>
+                                    </option>
+    
+                                </select>
+                                <label for="manager">Reporting Manager Name</label>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="form-floating mb-3">
+                                <input type="number" class="form-control" id="managerid" name="managerid"
+                                    value='<%= data.reporting_manager_id %>' disabled>
+                                <label for="managerid">Reporting Manager ID</label>
+                            </div>
+                        </div>
+                        <div class="col-12 d-grid">
+                            <button class="btn btn-primary" type="submit">Edit</button>
+                        </div>
+                    </form>
+                    <script src="js/pass.js"></script>
+                    <% }) %>
+    </div>
+    <script src="js/pass.js"></script>
+
+    <%- include('partials/footer') -%>

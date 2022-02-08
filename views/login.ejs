@@ -71,7 +71,7 @@ crossorigin="anonymous"></script>
     </div>
       <div id="liveAlertPlaceholder"></div>
 <% if(Message) { %>
-    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+    <div class="alert alert-<%= color %> alert-dismissible fade show" role="alert">
       
         <%= Message %>
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
@@ -136,4 +136,13 @@ crossorigin="anonymous"></script>
     integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
     crossorigin="anonymous"></script>
 </body>
+<footer style="position: fixed;
+            padding: 10px 10px 0px 10px;
+            bottom: 0;
+            width: 100%;
+            /* Height of the footer*/ 
+            height: 40px;
+            ">
+  <h6>© Copyright 2021 One Eight Technologies Pvt. Ltd. All Rights Reserved.</h6>
+</footer>
 </html>

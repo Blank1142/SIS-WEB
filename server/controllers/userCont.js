@@ -50,7 +50,7 @@ exports.view = (req, res) => {
       );
     });
   } else {
-    res.render("login", { Message: "" });
+    res.render("login", { Message: "",color:'danger' });
   }
 };
 
@@ -69,7 +69,7 @@ exports.formGet = (req, res) => {
       });
     });
   } else {
-    res.render("login", { Message: "" });
+    res.render("login", { Message: "",color:'danger' });
   }
 };
 
@@ -184,7 +184,7 @@ exports.formGetedit = (req, res) => {
       );
     });
   } else {
-    res.render("login", { Message: "" });
+    res.render("login", { Message: "",color:'danger' });
   }
 };
 
@@ -314,7 +314,7 @@ exports.login = (req, res) => {
   if (req.user) {
     return res.redirect('/')
   }
-  return res.render("login", { Message: "" });
+  return res.render("login", { Message: "",color:'danger' });
 };
 
 exports.postlogin = (req, res) => {
@@ -331,7 +331,7 @@ exports.postlogin = (req, res) => {
           if (rores.length === 0) {
             res.render("login", {
               Message:
-                "User does not exist in the Data Base contact Admin are check your UserID",
+                "User does not exist in the Data Base contact Admin are check your UserID",color:'danger'
             });
           } else {
             //
@@ -340,7 +340,7 @@ exports.postlogin = (req, res) => {
               req.body.Email,
               (er, re) => {
                 if (er) {
-                  res.render("login", { Message: "Invalid User " });
+                  res.render("login", { Message: "Invalid User ",color:'danger' });
                 } else {
                   if (re[0].role_name === "HR") {
                     pool.query(
@@ -351,7 +351,7 @@ exports.postlogin = (req, res) => {
                         if (!err) {
                           if (rows.length === 0) {
                             res.render("login", {
-                              Message: "Invalid User Password",
+                              Message: "Invalid User Password",color:'danger'
                             });
                           } else {
                             pool.query(`SELECT password_status FROM Dummy_Table WHERE emp_username=?`,req.body.Email,(errorss,quearydata)=>{
@@ -396,7 +396,7 @@ console.log(quearydata[0].password_status);
                         } else {
                           console.log(err);
                           res.render("login", {
-                            Message: "Invalid User ID are Password",
+                            Message: "Invalid User ID are Password",color:'danger'
                           });
                         }
                       }
@@ -404,7 +404,7 @@ console.log(quearydata[0].password_status);
                   } else {
                     res.render("login", {
                       Message:
-                        "User are not authorized to Login , Contact Admin",
+                        "User are not authorized to Login , Contact Admin",color:'danger'
                     });
                   }
                 }
@@ -480,7 +480,7 @@ exports.logout = (req, res) => {
   {
     return res.redirect('/')
   }
- return res.status(200).render("login", { Message: "" });
+ return res.status(200).render("login", { Message: "",color:'success'});
 };
 
 //changePassword
@@ -516,7 +516,7 @@ exports.changePassword = async (req, res) => {
               });
               res
                 .status(200)
-                .render("login", { Message: "Password Set successfully" });
+                .render("login", { Message: "Password Set successfully",color:'success' });
             } else {
               return res.render("error", {
                 err: "403",
@@ -570,7 +570,7 @@ else{
 
 
  } else {
-    res.render("login", { Message: "" });
+    res.render("login", { Message: "",color:'danger' });
   }
 };
 
@@ -680,7 +680,7 @@ res.render("error", { error: "403", message:"" });
   
 }
 else{
-   res.render("login", { Message: "You are not authorised " });
+   res.render("login", { Message: "You are not authorised ",color:'danger'  });
 }
 };
 
@@ -706,7 +706,7 @@ exports.postforgotPassword_Passwordchange = (req, res) => {
           if (!err) {
             
 
-            res.redirect("/login");
+             res.render("login", { Message: "you have changed your password successfully",color:'success' });
           }
           console.log(err);
         
@@ -737,7 +737,7 @@ const check=await promisify(jwt.verify)(req.query.id,md5(process.env.JWT_OTPSECR
                                 empid: check.id,
                                 emprole: check.role,});
 }catch{
-  res.render("login", { Message: "Your link got expired ! try again..." });
+  res.render("login", { Message: "Your link got expired ! try again...",color:'danger' });
 }
 };
 
@@ -763,7 +763,7 @@ exports.forgotPasswordresetmailpost=(req,res)=>{
           if (!err) {
             
 
-            res.render("login", { Message: "you have changed your password successfully" });
+            res.render("login", { Message: "you have changed your password successfully",color:'success' });
           }
           console.log(err);
         

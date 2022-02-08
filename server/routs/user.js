@@ -39,6 +39,11 @@ router.get('/forgotPassword_Passwordchange',user.forgotPassword_Passwordchange)
 router.post('/postforgotPassword_Passwordchange',user.postforgotPassword_Passwordchange);
 router.get('/forgotPasswordresetmail',user.forgotPasswordresetmail)
 router.post('/forgotPasswordresetmail',user.forgotPasswordresetmailpost)
+
+//profile
+router.get('/profile',user.profile)
+
+
 module.exports=router;
 
 

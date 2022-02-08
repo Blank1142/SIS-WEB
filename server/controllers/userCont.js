@@ -779,4 +779,31 @@ exports.forgotPasswordresetmailpost=(req,res)=>{
   };
 };
 
+//Profile
 
+exports.profile=async(req,res)=>{
+  if(req.cookies.sis){
+    try{
+      const decode = await promisify(jwt.verify)(req.cookies.sis, process.env.JWT_SECREAT);
+
+      pool.getConnection((error,connecrion)=>{
+        if(error) throw error;
+              pool.query("SELECT * FROM Employee_info WHERE emp_id=? && emp_status='Active'", [decode.id], (err, result) => {
+                    connecrion.release();
+ 
+ console.log(result)
+                  if(!err){
+                res.render('profile',{emp_id:result[0].emp_id,name:result[0].emp_name,email:result[0].emp_email,p1:result[0].phone_no_1,p2:result[0].phone_no_2,role:result[0].role_name,manager:result[0].reporting_manager_name})
+                  }
+                })
+      })
+
+    }catch (err) {
+            console.log(err);
+            
+        }
+
+  }else{
+    res.render("login", { Message: "You are not authorized ",color:'danger' });
+  }
+}

@@ -26,19 +26,20 @@ const pool = sql.createPool({
 
 
 
-///
+///Auth
 
 exports.islogin = async (req, res, next) => {
 
-
+//checking for Cookie
     if (req.cookies.sis) {
         try {
             
             const decode = await promisify(jwt.verify)(req.cookies.sis, process.env.JWT_SECREAT);
-            //
             
+            //connecting to DB
             pool.getConnection((error, connection) => {
                 if (error) throw error;
+                //Sql query to check employee
                 pool.query("SELECT emp_id,emp_name,emp_email,role_name FROM Employee_info WHERE emp_id=? && emp_status='Active'", [decode.id], (err, result) => {
                     connection.release();
  

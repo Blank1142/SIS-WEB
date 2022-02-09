@@ -4,6 +4,7 @@ const mail = require("../notif/account");
 const twil = require("../notif/twil");
 const jwt = require("jsonwebtoken");
 const { promisify } = require("util");
+
 /*
 const pool = sql.createPool({
   connectionLimit: 100,
@@ -27,21 +28,23 @@ const pool = sql.createPool({
 
 
 
-//
+//home page
 
 exports.view = (req, res) => {
   if (req.user) {
+    //DB connection
     pool.getConnection((err, connection) => {
       if (err) throw err;
-      console.log("connection ID " + connection.threadId);
-
+      
+      //SQL Query
       pool.query(
         'SELECT * FROM Employee_info WHERE emp_status="Active"',
         (err, rows) => {
-          
+          //releasing the db connection
           connection.release();
 
           if (!err) {
+            //responce
             res.render("home", { Name: req.user.emp_name, data: rows });
           } else {
             console.log(err);
@@ -53,13 +56,15 @@ exports.view = (req, res) => {
     res.render("login", { Message: "",color:'danger' });
   }
 };
-
+//GET - addUsers
 exports.formGet = (req, res) => {
   if (req.user) {
+     //DB connection
     pool.getConnection((err, connection) => {
       
       if (err) throw err;
-      console.log("connection ID " + connection.threadId);
+      
+      //sql query
       pool.query("SELECT * FROM Role", (err, rows) => {
         connection.release();
         if (!err) {
@@ -72,21 +77,21 @@ exports.formGet = (req, res) => {
     res.render("login", { Message: "",color:'danger' });
   }
 };
-
+//POST - addUsers
 exports.formPost = (req, res) => {
   let managername = null;
   let manaherid = null;
-  console.log(req.body.manager);
+ //creating manager name and id
   if (req.body.manager != "" && req.body.manager != undefined) {
     const managerdata = req.body.manager.split(",");
     managername = managerdata[1];
     manaherid = managerdata[0];
-    console.log(manaherid);
+    
   } else {
     managername = null;
     manaherid = null;
   }
-
+//generating Date and time
   const currentdate = new Date();
   const date =
     currentdate.getDate() +
@@ -101,7 +106,7 @@ exports.formPost = (req, res) => {
     ":" +
     currentdate.getSeconds();
 
-  console.log(date, time);
+  //creating body for sql query
   const data = {
     emp_id: req.body.emp_id,
     emp_name: req.body.Name,
@@ -130,10 +135,11 @@ password_status:'false',
 tag:'e',
 emp_username:req.body.Email
 }
+ //DB connection
   pool.getConnection((err, connection) => {
     if (err) throw err;
-    console.log("connection ID " + connection.threadId);
-
+    
+//sql query for inserting the user data in Employee_Credentials,Assigned_Role,Dummy_Table
     pool.query(
       "INSERT INTO Employee_info SET ?;INSERT INTO Employee_Credentials SET ?;INSERT INTO Assigned_Role SET ?;INSERT INTO Dummy_Table SET?",
       [data, emp_cred_data, assignroal,dummy],
@@ -141,11 +147,14 @@ emp_username:req.body.Email
         connection.release();
 
         if (!err) {
+
+          //sending login cred in  mail and sms
           mail.addusermail(
             req.body.Email,
             req.body.Email,
             req.body.floatingPassword
           );
+          
           twil.twil(req.body.Phone, req.body.Email, req.body.floatingPassword);
           res.redirect("/");
         } else {
@@ -158,12 +167,13 @@ emp_username:req.body.Email
   });
 };
 
+//GET - Editing the userform
 exports.formGetedit = (req, res) => {
   if (req.user) {
+    //DB Connection
     pool.getConnection((err, connection) => {
       if (err) throw err;
-      console.log("connection ID " + connection.threadId);
-
+     //sql query for getting Employee_info and Role
       pool.query(
         "SELECT * FROM Employee_info WHERE emp_id = ?;SELECT * FROM Role",
         [req.query.id],
@@ -188,10 +198,12 @@ exports.formGetedit = (req, res) => {
   }
 };
 
+//POST - edit user form
+
 exports.foemupdate = (req, res) => {
   let managername = null;
   let manaherid = null;
- 
+
   if (req.body.manager != "" && req.body.manager != undefined) {
     const managerdata = req.body.manager.split(",");
     managername = managerdata[1];
@@ -201,7 +213,7 @@ exports.foemupdate = (req, res) => {
     managername = null;
     manaherid = null;
   }
-
+//SQL query Body
   const data = {
     emp_id: req.params.id,
     emp_name: req.body.Name,
@@ -211,11 +223,11 @@ exports.foemupdate = (req, res) => {
     reporting_manager_name: managername,
     reporting_manager_id: manaherid,
   };
-
+//DB Connection
   pool.getConnection((err, connection) => {
     if (err) throw err;
-    console.log("connection ID " + connection.threadId);
-
+   
+//sql query for updating Employee_info
     pool.query(
       "UPDATE Employee_info SET ? WHERE emp_id=?",
       [data, req.params.id],
@@ -233,9 +245,12 @@ exports.foemupdate = (req, res) => {
   });
 };
 
+//GET - Role's page
 exports.getrole = (req, res) => {
+  //DB Connection
   pool.getConnection((err,connection)=>{
     if(err) throw err;
+    //sql query for getting Role
     pool.query(`SELECT * FROM Role`,(error,result)=>{
       connection.release();
       if(!error){
@@ -249,15 +264,17 @@ exports.getrole = (req, res) => {
   
 };
 
+//POST - Add Role's
 exports.addrole = (req, res) => {
+  //sql query body
   let data = {
     role_name: req.body.role.toUpperCase(),
   };
-
+//DB Connection
   pool.getConnection((error, connection) => {
     if (error) throw error;
-    console.log("connection ID " + connection.threadId);
-
+    
+//Sql query for inserting the role's and getting the role's
     pool.query("INSERT INTO Role SET ?;SELECT * FROM Role", data, (err, rows) => {
       connection.release();
       if (!err) {
@@ -269,10 +286,13 @@ exports.addrole = (req, res) => {
   });
 };
 
+//Delet the employee data
+
 exports.foemdelete = (req, res) => {
+  //DB Connection
   pool.getConnection((err, connection) => {
     if (err) throw err;
-
+//SQL Query for delete employee info from Employee_Credentials , Dummy_Table and updating the status to deactivate in Employee_info
     pool.query(
       `UPDATE Employee_info SET emp_status="Deactivate" WHERE emp_id=${req.params.id};DELETE FROM Employee_Credentials WHERE emp_id=${req.params.id};DELETE FROM Dummy_Table WHERE emp_id=${req.params.id}`,
       (err, rows) => {
@@ -287,12 +307,13 @@ exports.foemdelete = (req, res) => {
   });
 };
 
-//API
+//API - For getting employee details based on role
 exports.manager = (req, res) => {
+  //DB connection
   pool.getConnection((err, connection) => {
     if (err) throw err;
-    console.log("connection ID " + connection.threadId);
-
+    
+//SQL query for getting employee info based on role's
     pool.query(
       'SELECT * FROM Employee_info WHERE role_name = ? && emp_status="Active"',
       [req.params.id],
@@ -310,6 +331,8 @@ exports.manager = (req, res) => {
   });
 };
 
+
+//GET - Login Page
 exports.login = (req, res) => {
   if (req.user) {
     return res.redirect('/')
@@ -317,10 +340,13 @@ exports.login = (req, res) => {
   return res.render("login", { Message: "",color:'danger' });
 };
 
+//POST - Login Page
 exports.postlogin = (req, res) => {
-  console.log(req.body);
+
+  //DB Connection
   pool.getConnection((err, connected) => {
     if (err) throw err;
+    //Sql Query for getting employee info based on there emailid(emp_username)
     pool.query(
       "SELECT * FROM Employee_Credentials WHERE emp_username=?",
       req.body.Email,
@@ -334,7 +360,7 @@ exports.postlogin = (req, res) => {
                 "User does not exist in the Data Base contact Admin are check your UserID",color:'danger'
             });
           } else {
-            //
+            // sql Query for getting the role name of the employee
             pool.query(
               "SELECT role_name FROM Employee_info WHERE  emp_email = ?",
               req.body.Email,
@@ -343,6 +369,7 @@ exports.postlogin = (req, res) => {
                   res.render("login", { Message: "Invalid User ",color:'danger' });
                 } else {
                   if (re[0].role_name === "HR") {
+                    //Sql Query for checking if the user id and password are matching from  Employee_Credentials
                     pool.query(
                       `SELECT emp_id FROM Employee_Credentials WHERE emp_username=? && emp_password=?`,
                       [req.body.Email, md5(req.body.floatingPassword)],
@@ -354,6 +381,7 @@ exports.postlogin = (req, res) => {
                               Message: "Invalid User Password",color:'danger'
                             });
                           } else {
+                            //SQL QUERY for getting Password Status from Dummy_Table
                             pool.query(`SELECT password_status FROM Dummy_Table WHERE emp_username=?`,req.body.Email,(errorss,quearydata)=>{
 console.log(quearydata[0].password_status);
  
@@ -367,13 +395,13 @@ console.log(quearydata[0].password_status);
                             if (quearydata[0].password_status === "true") {
                               const id = rows[0].emp_id;
                               const role = re[0].role_name;
-                              console.log(id);
+                          //Creating the Token's
                               const token = jwt.sign(
                                 { id: id, role: role },
                                 process.env.JWT_SECREAT,
                                 { expiresIn: process.env.jWT_EXPERIATION }
                               );
-                              console.log("TOKEN IS  " + token);
+                              //Creating the coolie Exp Date
                               const cookieOptions = {
                                 expires: new Date(
                                   Date.now() +
@@ -385,6 +413,7 @@ console.log(quearydata[0].password_status);
                                 ),
                                 httpOnly: true,
                               };
+                              //Sending cookie with name to call
                               res.cookie("sis", token, cookieOptions);
 
                               return res.redirect("/");
@@ -392,7 +421,7 @@ console.log(quearydata[0].password_status);
                             });
                             
                           }
-                          console.log(rows);
+                         
                         } else {
                           console.log(err);
                           res.render("login", {
@@ -419,6 +448,7 @@ console.log(quearydata[0].password_status);
   });
 };
 
+//Post - SetPassword Page 
 exports.setpassword = (req, res) => {
 
   const data = {
@@ -428,9 +458,12 @@ exports.setpassword = (req, res) => {
   const dummydata={
     password_status: "true"
   }
+  //Checking if the pasword is matching
   if (req.body.floatingPassword === req.body.Password) {
+    //DB Connection
     pool.getConnection((err, connection) => {
       if (err) throw err;
+      //Sql Query for updating the  existing password
       pool.query(
         `UPDATE Employee_Credentials SET ? WHERE emp_id=${req.query.id};UPDATE Dummy_Table SET ? WHERE emp_id=${req.query.id}`,
         [data,dummydata],
@@ -439,7 +472,7 @@ exports.setpassword = (req, res) => {
           if (!err) {
             const employid = req.query.id;
             const rol = req.query.role;
-           
+           //creating the token
             const token = jwt.sign(
               { id: employid, role: rol },
               process.env.JWT_SECREAT,
@@ -447,12 +480,14 @@ exports.setpassword = (req, res) => {
                 expiresIn: process.env.jWT_EXPERIATION,
               }
             );
+            //creating the cookie exp date
             const cookicreation = {
               expires: new Date(
                 Date.now() * process.env.JWT_COOKIE_EXP * 24 * 60 * 60 * 1000
               ),
               httpOnly: true,
             };
+            //Sending the cookie
             res.cookie("sis", token, cookicreation);
 
             res.redirect("/");
@@ -471,7 +506,9 @@ exports.setpassword = (req, res) => {
   }
 };
 
+//Logout 
 exports.logout = (req, res) => {
+  //making the cookie expire
   res.cookie("sis", "logout", {
     expires: new Date(Date.now() + 2 * 1000),
     httpOnly: true,
@@ -484,24 +521,24 @@ exports.logout = (req, res) => {
 };
 
 //changePassword
-
 exports.changePassword = async (req, res) => {
   const data = {
     emp_password: md5(req.body.changePassword),
   };
   console.log(req.body);
   console.log(req.cookies);
+  //checking for the cookie
   if (req.cookies.sis) {
     try {
       const decode = await promisify(jwt.verify)(
         req.cookies.sis,
         process.env.JWT_SECREAT
       );
-      console.log(decode.id);
-
+     
+   //DB Connection
       pool.getConnection((error, connection) => {
         if (error) throw error;
-
+//Sql Queary for updating the existing password
         pool.query(
           `UPDATE Employee_Credentials SET ? WHERE emp_id=${decode.id}`,
           data,
@@ -540,15 +577,15 @@ exports.test = (req, res) => {
   res.render("demohome");
 };
 
-////employeefilter
+// employeefilter for getting deactivate users
 
 exports.employeefilter=(req,res)=>{
 if(req.user){
 if(req.query.id ==='Deactivate'){
    pool.getConnection((err, connection) => {
       if (err) throw err;
-      console.log("connection ID " + connection.threadId);
-
+      
+//SQL Query for getting all deactivate usere
       pool.query(
         'SELECT * FROM Employee_info WHERE emp_status=?',req.query.id,
         (err, rows) => {
@@ -574,11 +611,11 @@ else{
   }
 };
 
-///loginfilter
+//API - loginfilter
 exports.loginfilter=(req,res)=>{
   pool.getConnection((error,conection)=>{
     if(error) throw error;
-
+//SQL Query for getting the details based on username
     pool.query('SELECT * FROM Employee_Credentials WHERE emp_username=?',req.query.id,(err,result)=>{
       conection.release();
 if(!err){
@@ -591,13 +628,14 @@ else{
     })
   })
 }
-///roleDelete
-
+/// to delete role
 exports.roleDelete=(req,res)=>{
     
     const data=req.params.id;
+    //DB Connection
     pool.getConnection((err,connection)=>{
         if(err) throw err;
+        //SQL Query for Delete role
         pool.query(`DELETE FROM Role WHERE role_id=?`,data,(error,result)=>{
             connection.release();
             if(!error){
@@ -611,11 +649,12 @@ exports.roleDelete=(req,res)=>{
     })
 
 };
-///adduseredit
+///GET - Edit the Role's
 exports.roleedit=(req,res)=>{
-   
+   //DB Connection
     pool.getConnection((err,connection)=>{
         if(err) throw err;
+        //sql query for getting all roles
         pool.query(`SELECT * FROM Role `,(error,result)=>{
             connection.release();
             if(!error){
@@ -633,19 +672,20 @@ exports.roleedit=(req,res)=>{
 
 
 
-//Role-editaddrole
+//POST - Edit ROLE'S
 exports.editaddrole=(req,res)=>{
-console.log(req.body.role);
+
 const rolename={
   role_name:req.body.role.toUpperCase()
 }
-
+//DB Connection
 pool.getConnection((error,connection)=>{
   if(error) throw error;
+  //SQL Query for updating the role based on role id
   pool.query(`UPDATE Role SET ? WHERE role_id=?`,[rolename,req.query.id],(err,result)=>{
     connection.release();
     if(!err){
-      console.log(result)
+      
      res.redirect('/add_role');
             }
             else{
@@ -656,14 +696,15 @@ pool.getConnection((error,connection)=>{
 });
 
 };
-///forgotPassword
+/// login page forgotPassword
 exports.forgotPassword=(req,res)=>{
 res.render("forgotPassword");
 }
 
-///forgotPassword_Passwordchange
+///get - Login page forgotPassword_Passwordchange
 
 exports.forgotPassword_Passwordchange=async (req,res)=>{
+  //check for the otp cookie
 if(req.cookies.ForhotPasswordCheck)
 {
   try{
@@ -684,7 +725,7 @@ else{
 }
 };
 
-//forgotPassword Post
+//Post - Login page forgotPassword Post
 
 exports.postforgotPassword_Passwordchange = (req, res) => {
 
@@ -695,9 +736,12 @@ exports.postforgotPassword_Passwordchange = (req, res) => {
   const dummydata={
     password_status: "true"
   }
+  //checking for the password
   if (req.body.floatingPassword === req.body.Password) {
+    //DB Connection
     pool.getConnection((err, connection) => {
       if (err) throw err;
+//SQL Query for updating the password and changing the password Status
       pool.query(
         `UPDATE Employee_Credentials SET ? WHERE emp_id=${req.query.id};UPDATE Dummy_Table SET ? WHERE emp_id=${req.query.id}`,
         [data,dummydata],
@@ -724,12 +768,13 @@ exports.postforgotPassword_Passwordchange = (req, res) => {
 
 
 
-///get bemailforgetpassword
+///get-login page forgot password by email-link
 
 
 exports.forgotPasswordresetmail=async(req,res)=>{
 
 try{
+  //verify the token
 const check=await promisify(jwt.verify)(req.query.id,md5(process.env.JWT_OTPSECREAT))
 
 
@@ -742,7 +787,7 @@ const check=await promisify(jwt.verify)(req.query.id,md5(process.env.JWT_OTPSECR
 };
 
 
-///post emailforgetpassword
+///post-login page  email link forgetpassword
 
 exports.forgotPasswordresetmailpost=(req,res)=>{
   const data = {
@@ -779,29 +824,29 @@ exports.forgotPasswordresetmailpost=(req,res)=>{
   };
 };
 
-//Profile
+//Profile page
 
 exports.profile=async(req,res)=>{
-  if(req.cookies.sis){
-    try{
+  //checking for cookie
+  
+  if(req.user){
+    
       const decode = await promisify(jwt.verify)(req.cookies.sis, process.env.JWT_SECREAT);
-
+//DB connection 
       pool.getConnection((error,connecrion)=>{
         if(error) throw error;
-              pool.query("SELECT * FROM Employee_info WHERE emp_id=? && emp_status='Active'", [decode.id], (err, result) => {
+        //sql query for selecting employee info
+              pool.query("SELECT * FROM Employee_info WHERE emp_id=? && emp_status='Active'", [req.user.emp_id], (err, result) => {
                     connecrion.release();
  
- console.log(result)
+ 
                   if(!err){
                 res.render('profile',{emp_id:result[0].emp_id,name:result[0].emp_name,email:result[0].emp_email,p1:result[0].phone_no_1,p2:result[0].phone_no_2,role:result[0].role_name,manager:result[0].reporting_manager_name})
                   }
                 })
       })
 
-    }catch (err) {
-            console.log(err);
-            
-        }
+   
 
   }else{
     res.render("login", { Message: "You are not authorized ",color:'danger' });

@@ -639,7 +639,8 @@ exports.roleDelete=(req,res)=>{
         pool.query(`DELETE FROM Role WHERE role_id=?`,data,(error,result)=>{
             connection.release();
             if(!error){
-                res.redirect('/add_role')
+                //res.redirect('/add_role')
+                res.render("addrole", { Message: "Role is deleted successfully",rolename:'',url:'add_role',data:result,button:'Add Role' });
             }
             else{
                // console.log(error)
@@ -652,21 +653,28 @@ exports.roleDelete=(req,res)=>{
 ///GET - Edit the Role's
 exports.roleedit=(req,res)=>{
    //DB Connection
+   
+   
     pool.getConnection((err,connection)=>{
         if(err) throw err;
         //sql query for getting all roles
         pool.query(`SELECT * FROM Role `,(error,result)=>{
             connection.release();
+            if(req.query.name != "HR"){
+
             if(!error){
-           res.render("addrole", { Message: "",url:`editaddrole?id=${req.query.id}`,rolename:req.query.name,data:result,button:'Edit' });
+           res.render("addrole", { Message: "",url:`editaddrole?id=${req.query.id}&name=${req.query.name}`,rolename:req.query.name,data:result,button:'Edit' });
             }
             else{
                // console.log(error)
                 res.render("error", { error: "403", message: `DataBase Error` });
             }
+            }else{
+    res.render("addrole", { Message: "You can not change this Role",rolename:'',url:'add_role',data:result,button:'Add Role' });
+  }
         })
     })
-
+  
 
 };
 
@@ -674,7 +682,7 @@ exports.roleedit=(req,res)=>{
 
 //POST - Edit ROLE'S
 exports.editaddrole=(req,res)=>{
-
+console.log(req.query)
 const rolename={
   role_name:req.body.role.toUpperCase()
 }
@@ -682,11 +690,11 @@ const rolename={
 pool.getConnection((error,connection)=>{
   if(error) throw error;
   //SQL Query for updating the role based on role id
-  pool.query(`UPDATE Role SET ? WHERE role_id=?`,[rolename,req.query.id],(err,result)=>{
+  pool.query(`UPDATE Role SET ? WHERE role_id=?;UPDATE Employee_info Set ? WHERE role_name =?;UPDATE Assigned_Role Set ? WHERE role_name =?`,[rolename,req.query.id,rolename,req.query.name,rolename,req.query.name],(err,result)=>{
     connection.release();
     if(!err){
       
-     res.redirect('/add_role');
+      res.redirect('/add_role')
             }
             else{
                console.log(err)

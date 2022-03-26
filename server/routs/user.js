@@ -56,7 +56,9 @@ router.post('/forgotPasswordresetmail',user.forgotPasswordresetmailpost)
 
 //profile
 router.get('/profile',auth.islogin,user.profile)
-
+//chat
+router.get('/chat',auth.islogin,user.chat);
+router.get('/chatRoom/:name',auth.islogin,user.chatroom);
 
 module.exports=router;
 

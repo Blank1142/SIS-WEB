@@ -4,6 +4,7 @@ const togglePasswordsetnew=document.getElementById('togglePasswordsetnew')
 const oldpassword=document.getElementById('oldpassword');
 const changePassword=document.getElementById('changePassword');
 const floatingPasswordd=document.getElementById('floatingPasswordd');
+
 togglepassword.addEventListener('click', () => {
   
           

@@ -4,8 +4,8 @@ const mail = require("../notif/account");
 const twil = require("../notif/twil");
 const jwt = require("jsonwebtoken");
 const { promisify } = require("util");
+const chatusers=require('../chat/storage')
 
-/*
 const pool = sql.createPool({
   connectionLimit: 100,
   host: process.env.DB_HOST,
@@ -14,8 +14,8 @@ const pool = sql.createPool({
   database: process.env.DB_NAME,
   multipleStatements: true,
 });
-*/
 
+/*
 const pool = sql.createPool({
   connectionLimit: 100,
   host: process.env.DEMO_DB_HOST,
@@ -24,8 +24,7 @@ const pool = sql.createPool({
   database: process.env.DEMO_DB,
   multipleStatements: true,
 });
-
-
+*/
 
 
 //home page
@@ -44,7 +43,7 @@ exports.view = (req, res) => {
           connection.release();
 
           if (!err) {
-            //responce
+           
             res.render("home", { Name: req.user.emp_name, data: rows });
           } else {
             console.log(err);
@@ -362,7 +361,7 @@ exports.postlogin = (req, res) => {
           } else {
             // sql Query for getting the role name of the employee
             pool.query(
-              "SELECT role_name FROM Employee_info WHERE  emp_email = ?",
+              "SELECT role_name,emp_name FROM Employee_info WHERE  emp_email = ?",
               req.body.Email,
               (er, re) => {
                 if (er) {
@@ -383,7 +382,7 @@ exports.postlogin = (req, res) => {
                           } else {
                             //SQL QUERY for getting Password Status from Dummy_Table
                             pool.query(`SELECT password_status FROM Dummy_Table WHERE emp_username=?`,req.body.Email,(errorss,quearydata)=>{
-console.log(quearydata[0].password_status);
+
  
                             if (quearydata[0].password_status === "false") {
                               res.render("newpassword", {
@@ -401,6 +400,11 @@ console.log(quearydata[0].password_status);
                                 process.env.JWT_SECREAT,
                                 { expiresIn: process.env.jWT_EXPERIATION }
                               );
+                              const chatToken=jwt.sign(
+                                { name:re[0].emp_name },
+                                process.env.JWT_SECREAT,
+                                { expiresIn: process.env.jWT_EXPERIATION }
+                              );
                               //Creating the coolie Exp Date
                               const cookieOptions = {
                                 expires: new Date(
@@ -413,8 +417,30 @@ console.log(quearydata[0].password_status);
                                 ),
                                 httpOnly: true,
                               };
+
+                               const chatCookieOptions = {
+                                expires: new Date(
+                                  Date.now() +
+                                    process.env.JWT_COOKIE_EXP *
+                                      24 *
+                                      60 *
+                                      60 *
+                                      1000
+                                )
+                              };
+                              const tosterName=(re[0].emp_name).toUpperCase().replace(/\s+/g, '');
+                              let tosterNameCookiee='';
+                              //encode
+                              for(let i=0;i<tosterName.length;i++)
+                              {
+                                const v1=tosterName.charCodeAt(i);
+                                const fv=String.fromCharCode(v1-2);
+                                tosterNameCookiee += fv
+                              }
                               //Sending cookie with name to call
                               res.cookie("sis", token, cookieOptions);
+                               res.cookie("sisChat", chatToken, chatCookieOptions);
+                               res.cookie('OAEUD',tosterNameCookiee,chatCookieOptions);
 
                               return res.redirect("/");
                             }
@@ -480,6 +506,7 @@ exports.setpassword = (req, res) => {
                 expiresIn: process.env.jWT_EXPERIATION,
               }
             );
+            
             //creating the cookie exp date
             const cookicreation = {
               expires: new Date(
@@ -525,8 +552,7 @@ exports.changePassword = async (req, res) => {
   const data = {
     emp_password: md5(req.body.changePassword),
   };
-  console.log(req.body);
-  console.log(req.cookies);
+  
   //checking for the cookie
   if (req.cookies.sis) {
     try {
@@ -571,11 +597,6 @@ exports.changePassword = async (req, res) => {
   }
 };
 
-////test
-
-exports.test = (req, res) => {
-  res.render("demohome");
-};
 
 // employeefilter for getting deactivate users
 
@@ -859,4 +880,72 @@ exports.profile=async(req,res)=>{
   }else{
     res.render("login", { Message: "You are not authorized ",color:'danger' });
   }
+}
+
+//test 
+exports.test = (req, res) => {}
+////chat
+
+exports.chat = (req, res) => {
+   if (req.user) {
+  pool.getConnection((error,connection)=>{
+    if(error) throw error;
+    pool.query('SELECT * FROM Employee_info WHERE emp_status="Active"',(err,result)=>{
+      connection.release();
+      if(!err)
+      {
+const reciveruser=(req.user.emp_name).toUpperCase().replace(/\s+/g, '');
+          const onlineusers=chatusers.allUsers();
+          
+        const data=[];
+        result.forEach((e)=>{
+          const status=onlineusers.find((er)=>{return er.name === e.emp_name});
+         const unreadmessages=chatusers.unreadMessages((e.emp_name).toUpperCase().replace(/\s+/g, ''),reciveruser)
+         
+      
+         
+          let statusValue='';
+          if(status)
+          {
+            statusValue="online";
+          }
+          else{
+            statusValue="offline"
+          }
+         
+          const value={emp_name:e.emp_name,
+          role_name:e.role_name,
+        status:statusValue,unreadMessages:unreadmessages.length}
+        data.push(value)
+        });
+
+        const loginUser=req.user.emp_name
+
+         res.render("chat",{data:data,loginUser:loginUser});
+      }
+    });
+  });
+ }
+   else{
+     res.redirect('/login');
+   }
+};
+
+
+
+///chat Room .replace(/\s+/g, '')
+
+exports.chatroom =(req,res)=>{
+   if (req.user) {
+     const usern=req.user.emp_name.toUpperCase().replace(/\s+/g, '');
+     const chatUser=req.params.name.toUpperCase().replace(/\s+/g, '');
+     
+     const room= [usern,chatUser];
+   const roomname=  room.sort().join('-');
+   console.log(roomname)
+  res.render('chatRoom',{croom:roomname,sender:usern,reciver:chatUser});
+   }
+   else{
+     res.redirect('/login');
+   }
 }

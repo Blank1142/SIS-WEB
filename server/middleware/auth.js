@@ -2,7 +2,7 @@ const jwt = require('jsonwebtoken')
 const { promisify } = require('util');
 const sql = require('mysql')
 
-/*
+
 const pool = sql.createPool({
     connectionLimit: 100,
     host: process.env.DB_HOST,
@@ -12,7 +12,7 @@ const pool = sql.createPool({
     multipleStatements: true
 });
 
-*/
+/*
 const pool = sql.createPool({
   connectionLimit: 100,
   host: process.env.DEMO_DB_HOST,
@@ -21,7 +21,7 @@ const pool = sql.createPool({
   database: process.env.DEMO_DB,
   multipleStatements: true,
 });
-
+*/
 
 
 
@@ -43,7 +43,7 @@ exports.islogin = async (req, res, next) => {
                 pool.query("SELECT emp_id,emp_name,emp_email,role_name FROM Employee_info WHERE emp_id=? && emp_status='Active'", [decode.id], (err, result) => {
                     connection.release();
  
- console.log(err)
+
                     if (!result) {
                       
                         return next();
@@ -53,7 +53,7 @@ exports.islogin = async (req, res, next) => {
                 })
             })
         } catch (err) {
-            console.log(err);
+           
             return next();
 
         }

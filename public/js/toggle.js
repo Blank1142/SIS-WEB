@@ -27,7 +27,7 @@ document.getElementById('changePassword').addEventListener('click',checkpassword
 
 ///function 
 
-function checkPassword(){
+function checkPasswordstatus(){
   const newpass=document.getElementById('changePassword').value;
   const checknew=document.getElementById('floatingPasswordd').value;
   if(newpass === checknew){

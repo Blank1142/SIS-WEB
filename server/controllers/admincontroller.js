@@ -8,7 +8,7 @@ const { connect } = require('http2');
 const mailotp=require('../notif/emailotp');
 const smsotp=require('../notif/smsotp')
 const linkmail=require('../notif/linkmail')
-/*
+
 const pool=sql.createPool({
     connectionLimit:100,
     host:process.env.DB_HOST,
@@ -17,7 +17,7 @@ const pool=sql.createPool({
     database:process.env.DB_NAME,
      multipleStatements: true
 });
- */
+/*
 const pool = sql.createPool({
   connectionLimit: 100,
   host: process.env.DEMO_DB_HOST,
@@ -26,7 +26,7 @@ const pool = sql.createPool({
   database: process.env.DEMO_DB,
   multipleStatements: true,
 });
-
+ */
 
 // Admin route to add employee
 exports.adduser=(req,res)=>{
@@ -253,7 +253,7 @@ res.cookie('ForhotPasswordCheck',token,cookioperate);
 /// send link to your g-mail forgot password
 
 exports.sendforgotpasswordmail=(req,res)=>{
-    console.log(req.params)
+
     pool.getConnection((error,connection)=>{
         if(error) throw error;
 //sQL QUERY FOR get user data
@@ -267,7 +267,7 @@ exports.sendforgotpasswordmail=(req,res)=>{
                      //creating token
                    const token = jwt.sign({id:id,role:role},md5(process.env.JWT_OTPSECREAT),{expiresIn:process.env.JWT_OTPEXPERIATION});
 //sending link
-const link=`https://demo-si.herokuapp.com/forgotPasswordresetmail?id=${token}`
+const link=`http://localhost:5000/forgotPasswordresetmail?id=${token}`
 
 linkmail.linkgmail(req.params.id,link);
 

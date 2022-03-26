@@ -1,0 +1,71 @@
+<%- include('partials/header') -%>
+
+
+<div class="container ">
+    
+    <div class="row justify-content-center">
+        <h1 style="text-align: center; color:#D50D88;">Nuron Chat</h1>
+        <div class="col-md-8">
+            <div style="
+  border-radius: 4px;
+  
+  padding: 20px;
+  margin-bottom: 20px;" class="people-nearby">
+<% data.forEach((data)=>{ %>
+ <% if(loginUser !== data.emp_name){ %>
+                <div style="  padding: 20px 0;
+  border-top: 1px solid hsl(180, 4%, 95%);
+  border-bottom: 1px solid #f1f2f2;
+  margin-bottom: 20px;" class="nearby-user">
+                    <div class="row">
+                      
+                        <div class="col-md-2 col-sm-2">
+                            <img style=" height: 80px;
+  width: 80px;
+  border-radius: 50%;" src="https://bootdey.com/img/Content/avatar/avatar7.png" alt="user"
+                                class="profile-photo-lg">
+                        </div>
+                        <div class="col-md-7 col-sm-7">
+                           
+                            <h5><a href="/chatRoom/<%= data.emp_name %>" class="profile-link"><%= data.emp_name %></a></h5>
+                           
+                            <h6 style="color: black;"><%= data.role_name %></h6>
+                           <br>
+               
+                            <% if(data.status === "online") {%>
+                                <h6 style="color: green;">Online</h6>
+                                <% }else {%>
+                                <h6 style="color: red;">Offline</h6>
+                             <% } %>
+                    
+                        </div>
+                        <div class="col-md-3 col-sm-3">
+                            <% if(data.unreadMessages === 0 ) {%>
+                                <button onclick="location.href = '/chatRoom/<%= data.emp_name %>';" class="btn btn-primary pull-right"><i 
+                                        class="bi bi-chat-square-text-fill"></i> &nbsp;Chat </button>
+                                <% }else {%>
+                                <button style="background-color: orange;color: white;" onclick="location.href = '/chatRoom/<%= data.emp_name %>';" class="btn pull-right"><i
+                                        class="bi bi-chat-square-text-fill"></i> &nbsp;Chat&nbsp;<%=data.unreadMessages%> </button>
+                                    <% } %>
+                            
+                        </div>
+                      
+                    </div>
+                 
+                </div>
+                <% } %>
+                <% }) %>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+<%- include('partials/footer') -%>
